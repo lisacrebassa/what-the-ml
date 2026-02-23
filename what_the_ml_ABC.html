@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What the ML — Notions A, B, C</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0047FF;
+    --cyan: #00D4FF;
+    --pink: #FF2D78;
+    --yellow: #FFE600;
+    --green: #00FFB2;
+    --dark: #0A0A1A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--dark);
+    color: #e0e8ff;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--blue);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: 35%;
+    width: 200px; height: 200px;
+    background: rgba(0,255,178,0.1);
+    border-radius: 50%;
+  }
+  .hero-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.15);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    color: #cce4ff;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--green); }
+  .hero p { max-width: 600px; color: rgba(255,255,255,0.85); font-size: 1rem; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .sections { padding: 60px 24px; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px; }
+
+  /* SECTION CARD */
+  .section-card {
+    background: #111828;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(0,71,255,0.25);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .section-letter {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .letter-a { background: var(--green); color: var(--dark); }
+  .letter-b { background: var(--blue); color: #fff; }
+  .letter-c { background: var(--pink); color: #fff; }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .section-body { padding: 28px 32px; }
+
+  /* DEFINITION BOX */
+  .definition-box {
+    background: rgba(0,71,255,0.1);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 1rem;
+    color: #c8d8ff;
+  }
+  .definition-box strong { color: var(--cyan); }
+
+  p.body-text { color: #a8b8d8; margin-bottom: 16px; font-size: 0.97rem; }
+
+  /* DIAGRAM */
+  .diagram {
+    background: #0c1424;
+    border-radius: 14px;
+    padding: 24px;
+    margin: 24px 0;
+    border: 1px solid rgba(0,212,255,0.15);
+  }
+  .diagram-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  /* CONCEPT GRID */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .concept-card {
+    background: #0c1424;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .concept-card .icon { font-size: 1.5rem; margin-bottom: 8px; }
+  .concept-card h4 { font-size: 0.9rem; font-weight: 700; color: #e0e8ff; margin-bottom: 4px; }
+  .concept-card p { font-size: 0.8rem; color: #7a8aaa; }
+
+  /* EXAMPLES */
+  .examples { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+  .example-row {
+    display: flex; align-items: center; gap: 14px;
+    background: #0c1424;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+  .example-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .example-text { color: #a8b8d8; }
+  .example-text strong { color: #fff; }
+
+  /* COMPARE GRID */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .compare-col {
+    background: #0c1424;
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .compare-col h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
+  .compare-col ul { list-style: none; }
+  .compare-col li { font-size: 0.82rem; color: #8898b8; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .compare-col li::before { content: '→ '; color: var(--cyan); }
+
+  /* ALGO PILLS */
+  .algo-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+  .algo-pill {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .pill-green  { background: rgba(0,255,178,0.1);  border-color: rgba(0,255,178,0.3);  color: #00FFB2; }
+  .pill-blue   { background: rgba(0,71,255,0.15);  border-color: rgba(0,71,255,0.4);   color: #88aaff; }
+  .pill-pink   { background: rgba(255,45,120,0.12);border-color: rgba(255,45,120,0.35);color: #ff88aa; }
+  .pill-yellow { background: rgba(255,230,0,0.1);  border-color: rgba(255,230,0,0.3);  color: #FFE600; }
+
+  /* FLOW STEPS */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+  }
+  .flow-step {
+    background: #0c1424;
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #ccd8f0;
+    text-align: center;
+    min-width: 90px;
+  }
+  .flow-step .step-icon { font-size: 1.2rem; margin-bottom: 4px; }
+  .flow-step .step-label { font-weight: 600; color: #fff; font-size: 0.75rem; }
+  .flow-arrow { color: var(--cyan); font-size: 1.2rem; }
+
+  /* SOURCES */
+  .sources {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .sources-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: #556; margin-bottom: 10px; }
+  .source-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.78rem;
+    color: #4477cc;
+    text-decoration: none;
+    margin-right: 16px;
+    margin-bottom: 4px;
+  }
+  .source-link:hover { color: var(--cyan); text-decoration: underline; }
+  .source-link::before { content: '↗'; }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue);
+    text-align: center;
+    padding: 30px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.82rem;
+    margin-top: 40px;
+  }
+  footer strong { color: #fff; }
+
+  @media (max-width: 600px) {
+    .compare-grid { grid-template-columns: 1fr; }
+    .section-body { padding: 20px; }
+    .section-header { padding: 20px; }
+    .flow { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">What the ML · La Plateforme</div>
+  <h1>Notions <span>A, B & C</span></h1>
+  <p>Documentation illustrée et sourcée sur la science des données, l'apprentissage automatique & profond, et l'apprentissage supervisé.</p>
+  <div class="hero-tags">
+    <span class="tag">A — La science des données</span>
+    <span class="tag">B — Apprentissage automatique & profond</span>
+    <span class="tag">C — Apprentissage supervisé</span>
+  </div>
+</div>
+
+<div class="sections">
+
+  <!-- ===== A: LA SCIENCE DES DONNÉES ===== -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter letter-a">A</div>
+      <div>
+        <div class="section-title">La science des données</div>
+        <div style="font-size:0.82rem;color:#667;margin-top:2px;">Data Science</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="definition-box">
+        La <strong>science des données</strong> est un domaine interdisciplinaire qui combine des techniques issues des <strong>mathématiques</strong>, de la <strong>statistique</strong>, de l'<strong>informatique</strong> et de l'<strong>expertise métier</strong> pour extraire de la connaissance et des insights à partir de données brutes structurées ou non.
+      </div>
+
+      <p class="body-text">La data science couvre tout le cycle de vie de la donnée : de sa collecte à sa visualisation, en passant par son nettoyage, son analyse et sa modélisation. Elle s'appuie notamment sur le machine learning pour automatiser la détection de patterns complexes.</p>
+
+      <!-- Diagramme de Venn Data Science -->
+      <div class="diagram">
+        <div class="diagram-title">🔬 Les trois piliers de la Data Science</div>
+        <svg viewBox="0 0 500 260" style="width:100%;max-width:520px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <!-- Circle 1: Maths/Stats -->
+          <circle cx="200" cy="110" r="90" fill="rgba(0,255,178,0.08)" stroke="rgba(0,255,178,0.4)" stroke-width="1.5"/>
+          <!-- Circle 2: Informatique -->
+          <circle cx="300" cy="110" r="90" fill="rgba(0,71,255,0.08)" stroke="rgba(0,71,255,0.4)" stroke-width="1.5"/>
+          <!-- Circle 3: Expertise métier -->
+          <circle cx="250" cy="185" r="90" fill="rgba(255,45,120,0.08)" stroke="rgba(255,45,120,0.4)" stroke-width="1.5"/>
+
+          <!-- Labels cercles -->
+          <text x="140" y="80" text-anchor="middle" fill="#00FFB2" font-size="11" font-family="Space Grotesk" font-weight="700">Maths &amp;</text>
+          <text x="140" y="93" text-anchor="middle" fill="#00FFB2" font-size="11" font-family="Space Grotesk" font-weight="700">Statistiques</text>
+
+          <text x="362" y="80" text-anchor="middle" fill="#88aaff" font-size="11" font-family="Space Grotesk" font-weight="700">Informatique</text>
+          <text x="362" y="93" text-anchor="middle" fill="#88aaff" font-size="11" font-family="Space Grotesk" font-weight="700">&amp; Code</text>
+
+          <text x="250" y="248" text-anchor="middle" fill="#ff88aa" font-size="11" font-family="Space Grotesk" font-weight="700">Expertise Métier</text>
+
+          <!-- Intersections labels -->
+          <text x="213" y="138" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">Machine</text>
+          <text x="213" y="149" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">Learning</text>
+
+          <text x="287" y="138" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">Data</text>
+          <text x="287" y="149" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">Eng.</text>
+
+          <text x="250" y="190" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">Analyse</text>
+          <text x="250" y="201" text-anchor="middle" fill="#cce" font-size="9" font-family="Space Grotesk">métier</text>
+
+          <!-- Centre -->
+          <circle cx="250" cy="155" r="28" fill="rgba(255,230,0,0.15)" stroke="rgba(255,230,0,0.5)" stroke-width="1.5"/>
+          <text x="250" y="151" text-anchor="middle" fill="#FFE600" font-size="10" font-family="Space Grotesk" font-weight="700">DATA</text>
+          <text x="250" y="163" text-anchor="middle" fill="#FFE600" font-size="10" font-family="Space Grotesk" font-weight="700">SCIENCE</text>
+        </svg>
+      </div>
+
+      <p class="body-text">Le cycle typique d'un projet de Data Science suit ces étapes :</p>
+
+      <div class="flow">
+        <div class="flow-step"><div class="step-icon">📥</div><div class="step-label">Collecte</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-icon">🧹</div><div class="step-label">Nettoyage</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-icon">🔍</div><div class="step-label">Exploration</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-icon">🤖</div><div class="step-label">Modélisation</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-icon">📊</div><div class="step-label">Visualisation</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><div class="step-icon">🚀</div><div class="step-label">Déploiement</div></div>
+      </div>
+
+      <p class="body-text"><strong style="color:#fff;">Outils & langages phares :</strong></p>
+      <div class="algo-list">
+        <span class="algo-pill pill-green">Python</span>
+        <span class="algo-pill pill-green">R</span>
+        <span class="algo-pill pill-green">SQL</span>
+        <span class="algo-pill pill-blue">Pandas / NumPy</span>
+        <span class="algo-pill pill-blue">Scikit-learn</span>
+        <span class="algo-pill pill-blue">TensorFlow / PyTorch</span>
+        <span class="algo-pill pill-yellow">Matplotlib / Seaborn</span>
+        <span class="algo-pill pill-yellow">Tableau / Power BI</span>
+      </div>
+
+      <div class="examples">
+        <div class="example-row"><span class="example-icon">🏦</span><span class="example-text"><strong>Finance :</strong> prévision du risque de crédit d'un client à partir de son historique bancaire.</span></div>
+        <div class="example-row"><span class="example-icon">🏥</span><span class="example-text"><strong>Santé :</strong> prédire la progression d'une maladie à partir de données patients.</span></div>
+        <div class="example-row"><span class="example-icon">📦</span><span class="example-text"><strong>E-commerce :</strong> optimiser les stocks en anticipant la demande future.</span></div>
+      </div>
+
+      <div class="sources">
+        <div class="sources-title">Sources</div>
+        <a class="source-link" href="https://fr.wikipedia.org/wiki/Science_des_donn%C3%A9es" target="_blank">Wikipedia — Science des données</a>
+        <a class="source-link" href="https://www.ibm.com/think/topics/data-science" target="_blank">IBM — What is Data Science?</a>
+        <a class="source-link" href="https://www.coursera.org/articles/what-is-data-science" target="_blank">Coursera — What is Data Science</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== B: APPRENTISSAGE AUTOMATIQUE & PROFOND ===== -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter letter-b">B</div>
+      <div>
+        <div class="section-title">L'apprentissage automatique & profond</div>
+        <div style="font-size:0.82rem;color:#667;margin-top:2px;">Machine Learning & Deep Learning</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="definition-box">
+        Le <strong>Machine Learning</strong> est un sous-domaine de l'IA qui permet aux machines d'<strong>apprendre à partir de données</strong> sans être explicitement programmées pour chaque tâche. Le <strong>Deep Learning</strong> en est une branche spécialisée utilisant des <strong>réseaux de neurones profonds</strong> (à multiples couches) pour traiter des données complexes comme les images ou la parole.
+      </div>
+
+      <!-- Emboîtement IA > ML > DL -->
+      <div class="diagram">
+        <div class="diagram-title">🪆 Relations — IA, Machine Learning & Deep Learning</div>
+        <svg viewBox="0 0 500 220" style="width:100%;max-width:500px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <!-- IA -->
+          <rect x="20" y="20" width="460" height="185" rx="18" fill="rgba(255,230,0,0.05)" stroke="rgba(255,230,0,0.35)" stroke-width="1.5"/>
+          <text x="42" y="44" fill="#FFE600" font-size="12" font-family="Space Grotesk" font-weight="700">Intelligence Artificielle (IA)</text>
+          <text x="42" y="58" fill="#667" font-size="10" font-family="Space Grotesk">Simulation du raisonnement humain par les machines</text>
+          <!-- ML -->
+          <rect x="55" y="72" width="390" height="120" rx="14" fill="rgba(0,71,255,0.08)" stroke="rgba(0,71,255,0.4)" stroke-width="1.5"/>
+          <text x="74" y="94" fill="#88aaff" font-size="12" font-family="Space Grotesk" font-weight="700">Machine Learning</text>
+          <text x="74" y="108" fill="#667" font-size="10" font-family="Space Grotesk">Apprentissage à partir de données</text>
+          <!-- DL -->
+          <rect x="96" y="120" width="310" height="62" rx="10" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.35)" stroke-width="1.5"/>
+          <text x="116" y="142" fill="#00D4FF" font-size="12" font-family="Space Grotesk" font-weight="700">Deep Learning</text>
+          <text x="116" y="157" fill="#667" font-size="10" font-family="Space Grotesk">Réseaux de neurones profonds (CNN, RNN, Transformer…)</text>
+        </svg>
+      </div>
+
+      <!-- Comparatif ML vs DL -->
+      <p class="body-text"><strong style="color:#fff;">Machine Learning vs Deep Learning :</strong></p>
+      <div class="compare-grid">
+        <div class="compare-col" style="border-top: 3px solid #88aaff;">
+          <h4 style="color:#88aaff;">🤖 Machine Learning</h4>
+          <ul>
+            <li>Features définies manuellement</li>
+            <li>Fonctionne avec peu de données</li>
+            <li>Interprétable (ex : arbres)</li>
+            <li>Rapide à entraîner</li>
+            <li>Données tabulaires, texte simple</li>
+          </ul>
+        </div>
+        <div class="compare-col" style="border-top: 3px solid #00D4FF;">
+          <h4 style="color:#00D4FF;">🧠 Deep Learning</h4>
+          <ul>
+            <li>Features apprises automatiquement</li>
+            <li>Nécessite de très grandes données</li>
+            <li>Boîte noire (moins interprétable)</li>
+            <li>Coûteux en calcul (GPU)</li>
+            <li>Images, audio, vidéo, NLP…</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Réseau de neurones SVG -->
+      <div class="diagram">
+        <div class="diagram-title">🧠 Architecture d'un réseau de neurones (simplifié)</div>
+        <svg viewBox="0 0 500 180" style="width:100%;max-width:500px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr2" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto">
+              <path d="M0,0 L5,2.5 L0,5 Z" fill="rgba(100,130,200,0.4)"/>
+            </marker>
+          </defs>
+          <!-- Couche entrée -->
+          <g>
+            <text x="60" y="20" text-anchor="middle" fill="#667" font-size="10" font-family="Space Grotesk">Entrée</text>
+            <circle cx="60" cy="55"  r="14" fill="#0c1424" stroke="rgba(0,255,178,0.6)" stroke-width="1.5"/>
+            <circle cx="60" cy="95"  r="14" fill="#0c1424" stroke="rgba(0,255,178,0.6)" stroke-width="1.5"/>
+            <circle cx="60" cy="135" r="14" fill="#0c1424" stroke="rgba(0,255,178,0.6)" stroke-width="1.5"/>
+            <text x="60" y="59"  text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Space Grotesk">x₁</text>
+            <text x="60" y="99"  text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Space Grotesk">x₂</text>
+            <text x="60" y="139" text-anchor="middle" fill="#00FFB2" font-size="9" font-family="Space Grotesk">x₃</text>
+          </g>
+          <!-- Connexions couche 1 -->
+          <g stroke="rgba(100,130,200,0.25)" stroke-width="1">
+            <line x1="74" y1="55"  x2="156" y2="50"/><line x1="74" y1="55"  x2="156" y2="90"/><line x1="74" y1="55"  x2="156" y2="130"/>
+            <line x1="74" y1="95"  x2="156" y2="50"/><line x1="74" y1="95"  x2="156" y2="90"/><line x1="74" y1="95"  x2="156" y2="130"/>
+            <line x1="74" y1="135" x2="156" y2="50"/><line x1="74" y1="135" x2="156" y2="90"/><line x1="74" y1="135" x2="156" y2="130"/>
+          </g>
+          <!-- Couche cachée 1 -->
+          <text x="170" y="20" text-anchor="middle" fill="#667" font-size="10" font-family="Space Grotesk">Cachée 1</text>
+          <circle cx="170" cy="50"  r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <circle cx="170" cy="90"  r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <circle cx="170" cy="130" r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <!-- Connexions couche 2 -->
+          <g stroke="rgba(100,130,200,0.25)" stroke-width="1">
+            <line x1="184" y1="50"  x2="266" y2="50"/><line x1="184" y1="50"  x2="266" y2="90"/><line x1="184" y1="50"  x2="266" y2="130"/>
+            <line x1="184" y1="90"  x2="266" y2="50"/><line x1="184" y1="90"  x2="266" y2="90"/><line x1="184" y1="90"  x2="266" y2="130"/>
+            <line x1="184" y1="130" x2="266" y2="50"/><line x1="184" y1="130" x2="266" y2="90"/><line x1="184" y1="130" x2="266" y2="130"/>
+          </g>
+          <!-- Couche cachée 2 -->
+          <text x="280" y="20" text-anchor="middle" fill="#667" font-size="10" font-family="Space Grotesk">Cachée 2</text>
+          <circle cx="280" cy="50"  r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <circle cx="280" cy="90"  r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <circle cx="280" cy="130" r="14" fill="#0c1424" stroke="rgba(0,71,255,0.6)" stroke-width="1.5"/>
+          <!-- Connexions sortie -->
+          <g stroke="rgba(100,130,200,0.25)" stroke-width="1">
+            <line x1="294" y1="50"  x2="386" y2="70"/><line x1="294" y1="50"  x2="386" y2="110"/>
+            <line x1="294" y1="90"  x2="386" y2="70"/><line x1="294" y1="90"  x2="386" y2="110"/>
+            <line x1="294" y1="130" x2="386" y2="70"/><line x1="294" y1="130" x2="386" y2="110"/>
+          </g>
+          <!-- Couche sortie -->
+          <text x="400" y="20" text-anchor="middle" fill="#667" font-size="10" font-family="Space Grotesk">Sortie</text>
+          <circle cx="400" cy="70"  r="14" fill="#0c1424" stroke="rgba(255,45,120,0.7)" stroke-width="1.5"/>
+          <circle cx="400" cy="110" r="14" fill="#0c1424" stroke="rgba(255,45,120,0.7)" stroke-width="1.5"/>
+          <text x="400" y="74"  text-anchor="middle" fill="#FF2D78" font-size="9" font-family="Space Grotesk">ŷ₁</text>
+          <text x="400" y="114" text-anchor="middle" fill="#FF2D78" font-size="9" font-family="Space Grotesk">ŷ₂</text>
+          <!-- Annotations -->
+          <text x="250" y="165" text-anchor="middle" fill="#445" font-size="9" font-family="Space Grotesk">Plus il y a de couches cachées, plus le réseau est "profond" (Deep Learning)</text>
+        </svg>
+      </div>
+
+      <p class="body-text"><strong style="color:#fff;">Applications notables du Deep Learning :</strong></p>
+      <div class="concept-grid">
+        <div class="concept-card"><div class="icon">👁️</div><h4>Vision par ordinateur</h4><p>Détection d'objets, reconnaissance faciale (CNN)</p></div>
+        <div class="concept-card"><div class="icon">💬</div><h4>NLP / LLM</h4><p>ChatGPT, traduction, résumé automatique (Transformers)</p></div>
+        <div class="concept-card"><div class="icon">🎙️</div><h4>Audio & parole</h4><p>Siri, transcription vocale, synthèse (RNN, Wave)</p></div>
+        <div class="concept-card"><div class="icon">🎮</div><h4>Jeux & robotique</h4><p>AlphaGo, agents autonomes (Reinforcement Learning)</p></div>
+      </div>
+
+      <div class="sources">
+        <div class="sources-title">Sources</div>
+        <a class="source-link" href="https://fr.wikipedia.org/wiki/Apprentissage_automatique" target="_blank">Wikipedia — Machine Learning</a>
+        <a class="source-link" href="https://fr.wikipedia.org/wiki/Apprentissage_profond" target="_blank">Wikipedia — Deep Learning</a>
+        <a class="source-link" href="https://www.ibm.com/think/topics/machine-learning" target="_blank">IBM — What is ML?</a>
+        <a class="source-link" href="https://www.deeplearningbook.org/" target="_blank">Goodfellow et al. — Deep Learning Book</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== C: APPRENTISSAGE SUPERVISÉ ===== -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter letter-c">C</div>
+      <div>
+        <div class="section-title">L'apprentissage supervisé</div>
+        <div style="font-size:0.82rem;color:#667;margin-top:2px;">Supervised Learning</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="definition-box">
+        L'<strong>apprentissage supervisé</strong> est un paradigme du machine learning où un modèle est entraîné à partir d'un jeu de données <strong>labellisé</strong> — chaque exemple d'entrée est associé à une <strong>réponse correcte</strong> (label). L'objectif est que le modèle apprenne à <strong>généraliser</strong> pour prédire les bonnes réponses sur de nouvelles données.
+      </div>
+
+      <p class="body-text">L'analogie classique : un élève (le modèle) apprend avec un professeur (les labels). Il reçoit des exercices corrigés, apprend à partir de ses erreurs, puis passe l'examen (données de test) seul.</p>
+
+      <!-- Pipeline apprentissage supervisé -->
+      <div class="diagram">
+        <div class="diagram-title">⚙️ Pipeline d'un modèle supervisé</div>
+        <svg viewBox="0 0 500 160" style="width:100%;max-width:520px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowC" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#334"/>
+            </marker>
+          </defs>
+
+          <!-- Bloc 1 : Données labellisées -->
+          <rect x="10" y="55" width="110" height="50" rx="10" fill="#0c1424" stroke="rgba(255,45,120,0.4)" stroke-width="1.5"/>
+          <text x="65" y="75" text-anchor="middle" fill="#ff88aa" font-size="10" font-family="Space Grotesk" font-weight="700">Données</text>
+          <text x="65" y="88" text-anchor="middle" fill="#ff88aa" font-size="10" font-family="Space Grotesk" font-weight="700">labellisées</text>
+          <text x="65" y="100" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">(X, y)</text>
+
+          <line x1="120" y1="80" x2="148" y2="80" stroke="#334" stroke-width="1.5" marker-end="url(#arrowC)"/>
+
+          <!-- Bloc 2 : Entraînement -->
+          <rect x="150" y="55" width="100" height="50" rx="10" fill="#0c1424" stroke="rgba(0,71,255,0.5)" stroke-width="1.5"/>
+          <text x="200" y="78" text-anchor="middle" fill="#88aaff" font-size="10" font-family="Space Grotesk" font-weight="700">Entraînement</text>
+          <text x="200" y="91" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">Ajustement</text>
+          <text x="200" y="101" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">des paramètres</text>
+
+          <line x1="250" y1="80" x2="278" y2="80" stroke="#334" stroke-width="1.5" marker-end="url(#arrowC)"/>
+
+          <!-- Bloc 3 : Modèle entraîné -->
+          <rect x="280" y="45" width="100" height="70" rx="10" fill="#0c1424" stroke="rgba(0,255,178,0.5)" stroke-width="2"/>
+          <text x="330" y="72" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Space Grotesk" font-weight="700">Modèle</text>
+          <text x="330" y="85" text-anchor="middle" fill="#00FFB2" font-size="10" font-family="Space Grotesk" font-weight="700">entraîné</text>
+          <text x="330" y="100" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">f(x) → ŷ</text>
+
+          <line x1="380" y1="80" x2="408" y2="80" stroke="#334" stroke-width="1.5" marker-end="url(#arrowC)"/>
+
+          <!-- Bloc 4 : Prédiction -->
+          <rect x="410" y="55" width="80" height="50" rx="10" fill="#0c1424" stroke="rgba(255,230,0,0.4)" stroke-width="1.5"/>
+          <text x="450" y="78" text-anchor="middle" fill="#FFE600" font-size="10" font-family="Space Grotesk" font-weight="700">Prédiction</text>
+          <text x="450" y="91" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">sur nouvelles</text>
+          <text x="450" y="101" text-anchor="middle" fill="#445" font-size="8" font-family="Space Grotesk">données</text>
+
+          <!-- Boucle erreur -->
+          <path d="M330 115 Q330 145 200 145 Q150 145 150 105" fill="none" stroke="rgba(255,45,120,0.35)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrowC)"/>
+          <text x="250" y="158" text-anchor="middle" fill="rgba(255,45,120,0.6)" font-size="9" font-family="Space Grotesk">Rétropropagation de l'erreur (loss)</text>
+        </svg>
+      </div>
+
+      <p class="body-text">L'apprentissage supervisé couvre deux grandes familles de tâches :</p>
+
+      <div class="compare-grid">
+        <div class="compare-col" style="border-top: 3px solid var(--pink);">
+          <h4 style="color:#ff88aa;">📂 Classification</h4>
+          <ul>
+            <li>Sortie = une catégorie (classe)</li>
+            <li>Ex : chat ou chien ?</li>
+            <li>Ex : email spam ou non ?</li>
+            <li>Logistic Regression, SVM…</li>
+          </ul>
+        </div>
+        <div class="compare-col" style="border-top: 3px solid var(--green);">
+          <h4 style="color:#00FFB2;">📈 Régression</h4>
+          <ul>
+            <li>Sortie = une valeur continue</li>
+            <li>Ex : prix d'un appartement</li>
+            <li>Ex : température demain</li>
+            <li>Linear Regression, XGBoost…</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="body-text"><strong style="color:#fff;">Exemples concrets d'apprentissage supervisé :</strong></p>
+      <div class="examples">
+        <div class="example-row"><span class="example-icon">📧</span><span class="example-text"><strong>Filtre anti-spam :</strong> entraîné sur des milliers d'emails étiquetés "spam" ou "non-spam".</span></div>
+        <div class="example-row"><span class="example-icon">🏠</span><span class="example-text"><strong>Estimation immobilière :</strong> prédit le prix d'un bien à partir de ses caractéristiques (surface, ville…).</span></div>
+        <div class="example-row"><span class="example-icon">🩻</span><span class="example-text"><strong>Diagnostic médical :</strong> classifie une image radio comme "sain" ou "pathologique".</span></div>
+        <div class="example-row"><span class="example-icon">🚗</span><span class="example-text"><strong>Voiture autonome :</strong> reconnaît des panneaux ou piétons à partir d'images annotées.</span></div>
+      </div>
+
+      <p class="body-text"><strong style="color:#fff;">Algorithmes courants :</strong></p>
+      <div class="algo-list">
+        <span class="algo-pill pill-pink">Régression Linéaire</span>
+        <span class="algo-pill pill-pink">Régression Logistique</span>
+        <span class="algo-pill pill-pink">K-Nearest Neighbors</span>
+        <span class="algo-pill pill-pink">SVM</span>
+        <span class="algo-pill pill-pink">Decision Tree</span>
+        <span class="algo-pill pill-pink">Random Forest</span>
+        <span class="algo-pill pill-pink">Gradient Boosting (XGBoost)</span>
+        <span class="algo-pill pill-pink">Réseau de Neurones</span>
+      </div>
+
+      <div class="sources">
+        <div class="sources-title">Sources</div>
+        <a class="source-link" href="https://scikit-learn.org/stable/supervised_learning.html" target="_blank">scikit-learn.org — Supervised Learning</a>
+        <a class="source-link" href="https://www.ibm.com/think/topics/supervised-learning" target="_blank">IBM — Supervised Learning</a>
+        <a class="source-link" href="https://developers.google.com/machine-learning/crash-course" target="_blank">Google ML Crash Course</a>
+        <a class="source-link" href="https://fr.wikipedia.org/wiki/Apprentissage_supervis%C3%A9" target="_blank">Wikipedia — Apprentissage supervisé</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>What the ML</strong> · Documentation réalisée dans le cadre du projet <em>what-is-machine-learning</em> · La Plateforme
+</footer>
+
+</body>
+</html>
